@@ -1,2 +1,2 @@
 # Vecto
-Libarary for Vectors, Matrices and Linear Algebra
+Library for Vectors, Matrices and Linear Algebra
