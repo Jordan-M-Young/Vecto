@@ -70,6 +70,12 @@ let matrix_d = matrix::add_matrices(matrix_a, matrix_b)
 
 // multiply matrices
 let matrix_d = matrix::multiply_matrices(matrix_a,matrix_b)
+
+// get matrix determinant
+let rows = vec![vec![1, 1, -1], vec![-2, 4, 2], vec![3, 3, 3]];
+let m = Matrix::new(rows).unwrap();
+let determinant = matrix::get_determinant(&m);
+
 ```
 
 ### Linear Algebra
