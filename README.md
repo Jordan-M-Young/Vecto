@@ -90,7 +90,7 @@ let rows_1: Vec<Vec<f64>> = vec![
 ];
 let matrix = Matrix::new(rows_1).unwrap();
 
-let solved = equation::solve_system(matrix);
+let solved = algebra::solve_system(matrix);
 ```
 
 
