@@ -64,3 +64,97 @@ mod tests {
         assert_eq!(is_all_zeroes(&vec5), false);
     }
 }
+
+pub fn get_perms(size: usize) -> Vec<Vec<usize>> {
+    let mut vec: Vec<usize> = vec![];
+    for i in 0..size {
+        vec.push(i);
+    }
+
+    heap_permutation(&mut vec, size)
+}
+
+pub fn heap_permutation<T: Copy + std::fmt::Debug>(vec: &mut Vec<T>, size: usize) -> Vec<Vec<T>> {
+    let mut permutations: Vec<Vec<T>> = vec![];
+
+    if size == 1 {
+        return vec![vec.to_vec()];
+    }
+
+    for i in 0..size {
+        let heap = heap_permutation(vec, size - 1);
+
+        for p in heap {
+            permutations.push(p)
+        }
+
+        if size.rem_euclid(2) == 1 {
+            let a = vec[0];
+            let b = vec[size - 1];
+            vec[0] = b;
+            vec[size - 1] = a;
+        } else {
+            let a = vec[i];
+            let b = vec[size - 1];
+            vec[i] = b;
+            vec[size - 1] = a;
+        }
+    }
+    permutations
+}
+
+pub fn get_permutation_sign<T: Copy + std::cmp::PartialOrd>(mut perm: Vec<T>) -> i32 {
+    let mut sign = 0;
+
+    let mut sign = 0;
+    let operation = modified_merge_sort(&mut perm);
+    if operation.rem_euclid(2) == 0 {
+        sign = 1;
+    } else {
+        sign = -1;
+    }
+    sign
+}
+
+pub fn modified_merge_sort<T: Copy + std::cmp::PartialOrd>(vec: &mut Vec<T>) -> i32 {
+    let mut operations = 0;
+    let mod_vec = vec;
+    if mod_vec.len() > 1 {
+        let mid = mod_vec.len() / 2;
+
+        let mut l: Vec<T> = mod_vec[0..mid].to_vec();
+        let mut r: Vec<T> = mod_vec[mid..].to_vec();
+        operations += modified_merge_sort(&mut l);
+        operations += modified_merge_sort(&mut r);
+
+        let mut i = 0;
+        let mut j = 0;
+        let mut k = 0;
+
+        while i < l.len() && j < r.len() {
+            if l[i] <= r[j] {
+                mod_vec[k] = l[i];
+                i += 1
+            } else {
+                mod_vec[k] = r[j];
+                j += 1;
+                operations += 1;
+            }
+            k += 1
+        }
+
+        while i < l.len() {
+            mod_vec[k] = l[i];
+            i += 1;
+            k += 1;
+        }
+
+        while j < r.len() {
+            mod_vec[k] = r[j];
+            j += 1;
+            k += 1;
+        }
+    }
+
+    return operations;
+}

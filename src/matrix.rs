@@ -1,5 +1,8 @@
-use crate::error::{self, CustomErrors, EmptyVectorError, MismatchError, NonUniformError};
+use crate::error::{
+    self, CustomErrors, EmptyVectorError, MismatchError, NonUniformError, NotImplementedError,
+};
 use crate::operations::add_vec;
+use crate::util;
 
 #[derive(Debug, Clone)]
 pub struct Matrix<T: Copy> {
@@ -81,7 +84,7 @@ pub fn add_matrices<T: std::marker::Copy + std::ops::Add<Output = T>>(
     matrix_1: Matrix<T>,
     matrix_2: Matrix<T>,
 ) -> Result<Matrix<T>, error::CustomErrors> {
-    if matrix_1.m != matrix_2.m || matrix_1.n != matrix_2.n {
+    if !can_add(&matrix_1, &matrix_2) {
         return Err(error::CustomErrors::Mismatch(MismatchError));
     }
 
@@ -110,7 +113,7 @@ pub fn multiply_matrices<
         return Err(CustomErrors::EmptyVector(EmptyVectorError));
     }
 
-    if matrix_1.n != matrix_2.m {
+    if !can_multiply(&matrix_1, &matrix_2) {
         return Err(CustomErrors::Mismatch(MismatchError));
     }
 
@@ -133,4 +136,53 @@ pub fn multiply_matrices<
         m: matrix_1.m,
         n: matrix_2.n,
     })
+}
+
+pub fn is_square<T: Copy>(matrix: &Matrix<T>) -> bool {
+    if matrix.m != matrix.n {
+        return false;
+    }
+    true
+}
+
+pub fn can_add<T: Copy>(matrix_1: &Matrix<T>, matrix_2: &Matrix<T>) -> bool {
+    if matrix_1.m != matrix_2.n {
+        return false;
+    }
+
+    if matrix_1.n != matrix_2.n {
+        return false;
+    }
+
+    true
+}
+
+pub fn can_multiply<T: Copy>(matrix_1: &Matrix<T>, matrix_2: &Matrix<T>) -> bool {
+    if matrix_1.n != matrix_2.m {
+        return false;
+    }
+    true
+}
+
+pub fn get_determinant<
+    T: From<u8> + From<i32> + Copy + std::ops::Mul<Output = T> + std::ops::AddAssign,
+>(
+    matrix: &Matrix<T>,
+) -> Result<T, CustomErrors> {
+    if !is_square(matrix) {
+        return Err(CustomErrors::NotImplemented(NotImplementedError));
+    }
+
+    let size = matrix.rows.len();
+    let rows = &matrix.rows;
+    let perms = util::get_perms(size);
+    let zero_cast: T = 0.into();
+    let mut determinant: T = zero_cast;
+    for perm in perms {
+        let sign = util::get_permutation_sign(perm.clone());
+        let sign: T = sign.into();
+        determinant += sign * (rows[0][perm[0]] * rows[1][perm[1]] * rows[2][perm[2]]);
+    }
+
+    Ok(determinant)
 }

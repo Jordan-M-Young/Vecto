@@ -1,6 +1,6 @@
-use crate::matrix::Matrix;
+use crate::{matrix::Matrix, util::get_permutation_sign};
 
-pub mod equation;
+pub mod algebra;
 pub mod error;
 pub mod matrix;
 pub mod operations;
@@ -31,9 +31,31 @@ fn main() {
     ];
     let matrix = Matrix::new(rows_1).unwrap();
 
-    let solved = equation::solve_system(matrix);
+    let solved = algebra::solve_system(matrix);
 
     println!("{:?}", solved);
 
+    let a: i32 = 8;
+    let b = 2;
+
+    let c: i32 = a.rem_euclid(b);
+    println!("{}", c);
     // println!("{:?}", m7)
+
+    let rows = vec![vec![1, 1, -1], vec![-2, 4, 2], vec![3, 3, 3]];
+
+    let m = Matrix::new(rows).unwrap();
+    let determinant = matrix::get_determinant(&m);
+
+    println!("DETERMINANT: {:?}", determinant)
+    // let size: usize = v.len();
+    // let mut v = vec![];
+    // let perms = util::heap_permutation(&mut v, size);
+
+    // for mut perm in perms {
+    //     println!("Perm {:?}",perm);
+    //     let sign = get_permutation_sign(perm);
+    //     println!("Sign {:?}",sign);
+
+    // }
 }
