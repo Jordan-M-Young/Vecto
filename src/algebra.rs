@@ -1,5 +1,5 @@
-use crate::error::{CustomErrors, MismatchError, NotImplementedError};
-use crate::matrix::{is_square, Matrix};
+use crate::error::{CustomErrors, MismatchError};
+use crate::matrix::Matrix;
 use crate::{operations, util};
 
 pub fn solve_system<T: std::marker::Copy + Into<f64>>(
@@ -125,7 +125,6 @@ pub fn solve_system<T: std::marker::Copy + Into<f64>>(
     println!("{:?}", var_coeffiecient_rows);
     Ok(solve_row)
 }
-
 
 #[cfg(test)]
 mod tests {
