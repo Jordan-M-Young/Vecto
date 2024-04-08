@@ -3,7 +3,7 @@ pub mod operations;
 
 use crate::error::{CustomErrors, EmptyVectorError, NonUniformError};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Matrix<T: Copy> {
     pub rows: Vec<Vec<T>>,
     pub m: usize,

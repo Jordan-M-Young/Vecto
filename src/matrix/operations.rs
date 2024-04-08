@@ -98,50 +98,78 @@ pub fn get_determinant<
     Ok(determinant)
 }
 
+//tests......
+// ------------------------------
+// ------------------------------
+
 #[cfg(test)]
 mod tests {
-    use crate::matrix::{Matrix,operations};
+    use crate::matrix::{self, operations, Matrix};
+
+    use super::multiply_matrices;
+
+    #[test]
+    fn test_add_matrices_2_x_2() {
+        let rows = vec![vec![5, -1], vec![-2, 4]];
+
+        let rows_2 = rows.clone();
+
+        let m = Matrix::new(rows).unwrap();
+        let m2 = Matrix::new(rows_2).unwrap();
+        let rows_3 = vec![vec![10, -2], vec![-4, 8]];
+        let m3 = Matrix::new(rows_3).unwrap();
+        match operations::add_matrices(m, m2) {
+            Ok(val) => {
+                assert_eq!(val, m3)
+            }
+            _ => assert!(false),
+        }
+    }
 
     #[test]
     fn test_get_determinant_2_x_2() {
-        let rows = vec![
-            vec![5, -1],
-            vec![-2, 4],
-        ];
-    
+        let rows = vec![vec![5, -1], vec![-2, 4]];
+
         let m = Matrix::new(rows).unwrap();
         match operations::get_determinant(&m) {
             Ok(result) => {
-                assert_eq!(result,18)
-
+                assert_eq!(result, 18)
             }
-            _ => assert!(false)
+            _ => assert!(false),
         };
-
-
     }
 
+    #[test]
+    fn test_multiply_matrices() {
+        let vec_1 = vec![1.0, 1.0, 1.0];
+        let vec_2 = vec![1.0, 1.0, 1.0];
+
+        let vec3 = vec![1.0, 1.0];
+        let vec4 = vec![1.0, 1.0];
+        let vec5 = vec![1.0, 1.0];
+
+        let m = Matrix::new(vec![vec_1, vec_2]).unwrap();
+        let m2 = Matrix::new(vec![vec3, vec4, vec5]).unwrap();
+
+        let m3: Matrix<f64> = Matrix::new(vec![vec![3.0, 3.0], vec![3.0, 3.0]]).unwrap();
+        match multiply_matrices(m, m2) {
+            Ok(matrix) => assert_eq!(matrix, m3),
+            _ => assert!(false),
+        }
+    }
 
     #[test]
     fn test_get_determinant_3_x_3() {
-        let rows = vec![
-            vec![5, 1, -1],
-            vec![-2, 4, 2],
-            vec![3, 3, 3],
-        ];
-    
+        let rows = vec![vec![5, 1, -1], vec![-2, 4, 2], vec![3, 3, 3]];
+
         let m = Matrix::new(rows).unwrap();
         match operations::get_determinant(&m) {
             Ok(result) => {
-                assert_eq!(result,60)
-
+                assert_eq!(result, 60)
             }
-            _ => assert!(false)
+            _ => assert!(false),
         };
-
-
     }
-
 
     #[test]
     fn test_get_determinant_4_x_4() {
@@ -151,16 +179,13 @@ mod tests {
             vec![3, 3, 3, 3],
             vec![1, 2, 3, 4],
         ];
-    
+
         let m = Matrix::new(rows).unwrap();
         match operations::get_determinant(&m) {
             Ok(result) => {
-                assert_eq!(result,66)
-
+                assert_eq!(result, 66)
             }
-            _ => assert!(false)
+            _ => assert!(false),
         };
-
-
     }
 }
