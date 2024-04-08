@@ -165,7 +165,13 @@ pub fn can_multiply<T: Copy>(matrix_1: &Matrix<T>, matrix_2: &Matrix<T>) -> bool
 }
 
 pub fn get_determinant<
-    T: From<u8> + From<i32> + Copy + std::ops::Mul<Output = T> + std::ops::AddAssign,
+    T: From<u8>
+        + From<i32>
+        + Copy
+        + std::ops::Mul<Output = T>
+        + std::ops::AddAssign
+        + std::fmt::Debug
+        + std::ops::MulAssign,
 >(
     matrix: &Matrix<T>,
 ) -> Result<T, CustomErrors> {
@@ -177,12 +183,18 @@ pub fn get_determinant<
     let rows = &matrix.rows;
     let perms = util::get_perms(size);
     let zero_cast: T = 0.into();
+    let one_cast: T = 1.into();
     let mut determinant: T = zero_cast;
     for perm in perms {
         let sign = util::get_permutation_sign(perm.clone());
         let sign: T = sign.into();
-        determinant += sign * (rows[0][perm[0]] * rows[1][perm[1]] * rows[2][perm[2]]);
+        let mut term: T = one_cast;
+        for i in 0..size {
+            term *= rows[i][perm[i]]
+        }
+        determinant += sign * term;
     }
+
 
     Ok(determinant)
 }

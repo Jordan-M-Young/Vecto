@@ -44,7 +44,6 @@ pub fn solve_system<T: std::marker::Copy + Into<f64>>(
     // equation solve loop
     for i in 0..m {
         let mut col: Vec<f64> = vec![];
-        println!("{},{:?}", i, &solve_row);
 
         //row normalizing
         for j in i..n {
@@ -64,7 +63,6 @@ pub fn solve_system<T: std::marker::Copy + Into<f64>>(
                 col.push(var_coeffiecient_rows[j][i])
             }
         }
-        println!("{},{:?}", i, &solve_row);
 
         // row subtraction
         if util::is_all_zeroes(&col) {
@@ -122,7 +120,6 @@ pub fn solve_system<T: std::marker::Copy + Into<f64>>(
         counter += 1;
     }
 
-    println!("{:?}", var_coeffiecient_rows);
     Ok(solve_row)
 }
 

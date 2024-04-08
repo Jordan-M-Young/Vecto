@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 pub fn vec_is_diagonalized<T: From<u8> + std::cmp::PartialEq>(
     vec: &Vec<T>,
     position: usize,
@@ -103,58 +105,39 @@ pub fn heap_permutation<T: Copy + std::fmt::Debug>(vec: &mut Vec<T>, size: usize
     permutations
 }
 
-pub fn get_permutation_sign<T: Copy + std::cmp::PartialOrd>(mut perm: Vec<T>) -> i32 {
-    let mut sign = 0;
+pub fn get_permutation_sign<T: Debug + Copy + std::cmp::PartialOrd>(mut perm: Vec<T>) -> i32 {
 
-    let mut sign = 0;
-    let operation = modified_merge_sort(&mut perm);
+    let operation = modified_bubble_sort(&mut perm);
     if operation.rem_euclid(2) == 0 {
-        sign = 1;
+        return 1;
     } else {
-        sign = -1;
+        return -1;
     }
-    sign
+
 }
 
-pub fn modified_merge_sort<T: Copy + std::cmp::PartialOrd>(vec: &mut Vec<T>) -> i32 {
+pub fn modified_bubble_sort<T: Copy + std::cmp::PartialOrd>(vec: &mut Vec<T>) -> i32 {
     let mut operations = 0;
-    let mod_vec = vec;
-    if mod_vec.len() > 1 {
-        let mid = mod_vec.len() / 2;
+    let n = vec.len();
 
-        let mut l: Vec<T> = mod_vec[0..mid].to_vec();
-        let mut r: Vec<T> = mod_vec[mid..].to_vec();
-        operations += modified_merge_sort(&mut l);
-        operations += modified_merge_sort(&mut r);
-
-        let mut i = 0;
-        let mut j = 0;
-        let mut k = 0;
-
-        while i < l.len() && j < r.len() {
-            if l[i] <= r[j] {
-                mod_vec[k] = l[i];
-                i += 1
-            } else {
-                mod_vec[k] = r[j];
-                j += 1;
+    for i in 0..n {
+        let mut swapped = false;
+        let upper_bound = n - i - 1;
+        for j in 0..upper_bound {
+            if vec[j] > vec[j + 1] {
+                let a = vec[j];
+                let b = vec[j + 1];
+                vec[j + 1] = a;
+                vec[j] = b;
                 operations += 1;
+                swapped = true
             }
-            k += 1
         }
 
-        while i < l.len() {
-            mod_vec[k] = l[i];
-            i += 1;
-            k += 1;
-        }
-
-        while j < r.len() {
-            mod_vec[k] = r[j];
-            j += 1;
-            k += 1;
+        if !swapped {
+            return operations;
         }
     }
 
-    return operations;
+    operations
 }
