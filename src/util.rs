@@ -1,3 +1,6 @@
+use crate::error::CustomErrors;
+use crate::error::EmptyVectorError;
+use crate::matrix::Matrix;
 use std::fmt::Debug;
 
 pub fn vec_is_diagonalized<T: From<u8> + std::cmp::PartialEq>(
@@ -106,14 +109,12 @@ pub fn heap_permutation<T: Copy + std::fmt::Debug>(vec: &mut Vec<T>, size: usize
 }
 
 pub fn get_permutation_sign<T: Debug + Copy + std::cmp::PartialOrd>(mut perm: Vec<T>) -> i32 {
-
     let operation = modified_bubble_sort(&mut perm);
     if operation.rem_euclid(2) == 0 {
         return 1;
     } else {
         return -1;
     }
-
 }
 
 pub fn modified_bubble_sort<T: Copy + std::cmp::PartialOrd>(vec: &mut Vec<T>) -> i32 {
@@ -140,4 +141,31 @@ pub fn modified_bubble_sort<T: Copy + std::cmp::PartialOrd>(vec: &mut Vec<T>) ->
     }
 
     operations
+}
+
+pub fn create_identity_matrix<T: Copy + From<u8>>(dim: usize) -> Result<Matrix<T>, CustomErrors> {
+    if dim == 0 {
+        return Err(CustomErrors::EmptyVector(EmptyVectorError));
+    }
+    let cast_zero: T = 0.into();
+    let cast_one: T = 1.into();
+
+    let mut rows: Vec<Vec<T>> = vec![];
+    for i in 0..dim {
+        let mut matrix_row: Vec<T> = vec![];
+
+        for j in 0..dim {
+            if j == i {
+                matrix_row.push(cast_one)
+            } else {
+                matrix_row.push(cast_zero)
+            }
+        }
+        rows.push(matrix_row);
+    }
+    Ok(Matrix {
+        rows,
+        m: dim,
+        n: dim,
+    })
 }
