@@ -1,5 +1,7 @@
 # Vecto
-Library for Vectors, Matrices and Linear Algebra
+Library for Vectors, Matrices and Linear Algebra.
+
+ Whether its for lightning fast cosine-similarity calculations, efficient system of equation solving, linear algebra computations, or just simple vector/matrix manipulation, Vecto has you covered.
 
 
 ## Build
