@@ -1,4 +1,4 @@
-use crate::error;
+use crate::error::{self, CustomErrors};
 use crate::matrix::logic::{can_add, can_multiply, is_square};
 use crate::matrix::Matrix;
 use crate::vector::operations::add_vec;
@@ -25,6 +25,58 @@ pub fn add_matrices<T: std::marker::Copy + std::ops::Add<Output = T>>(
         m: matrix_1.m,
         n: matrix_1.n,
     })
+}
+
+pub fn scalar_multiply<T: Copy + std::ops::Mul + std::ops::Mul<Output = T>>(
+    matrix: &Matrix<T>,
+    scalar: T,
+) -> Result<Matrix<T>, error::CustomErrors> {
+    let rows = &matrix.rows;
+    let m = matrix.m;
+    let n = matrix.n;
+
+    let mut new_rows: Vec<Vec<T>> = vec![];
+
+    for i in 0..m {
+        let mut new_row: Vec<T> = vec![];
+        for j in 0..n {
+            let new_val = rows[i][j] * scalar;
+            new_row.push(new_val)
+        }
+        new_rows.push(new_row)
+    }
+
+    match Matrix::new(new_rows) {
+        Ok(matrix) => Ok(matrix),
+        Err(err) => Err(err),
+    }
+}
+
+pub fn scalar_divide<T: Copy + Into<f64> + std::ops::Div + std::ops::Div<Output = T>>(
+    matrix: &Matrix<T>,
+    scalar: T,
+) -> Result<Matrix<f64>, CustomErrors> {
+    let rows = &matrix.rows;
+    let m = matrix.m;
+    let n = matrix.n;
+    let scalar: f64 = scalar.into();
+
+    let mut new_rows: Vec<Vec<f64>> = vec![];
+
+    for i in 0..m {
+        let mut new_row: Vec<f64> = vec![];
+        for j in 0..n {
+            let old_val: f64 = rows[i][j].into();
+            let new_val = old_val / scalar;
+            new_row.push(new_val)
+        }
+        new_rows.push(new_row)
+    }
+
+    match Matrix::new(new_rows) {
+        Ok(matrix) => Ok(matrix),
+        Err(err) => Err(err),
+    }
 }
 
 pub fn multiply_matrices<
@@ -104,7 +156,7 @@ pub fn get_determinant<
 
 #[cfg(test)]
 mod tests {
-    use crate::matrix::{self, operations, Matrix};
+    use crate::matrix::{operations, Matrix};
 
     use super::multiply_matrices;
 
