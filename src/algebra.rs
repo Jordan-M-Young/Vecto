@@ -1,6 +1,6 @@
 use crate::error::{CustomErrors, MismatchError};
 use crate::matrix::Matrix;
-use crate::{operations, util};
+use crate::vector::{operations, util};
 
 pub fn solve_system<T: std::marker::Copy + Into<f64>>(
     coeff_matrix: Matrix<T>,

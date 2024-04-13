@@ -39,7 +39,7 @@ pub fn is_all_zeroes<T: From<u8> + std::cmp::PartialEq>(vec: &Vec<T>) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::util::{is_all_zeroes, vec_is_diagonalized};
+    use crate::vector::util::{is_all_zeroes, vec_is_diagonalized};
     #[test]
     fn test_vec_is_diagonalized() {
         let vec1 = vec![0, 0, 1];

@@ -1,8 +1,8 @@
 use crate::error;
 use crate::matrix::logic::{can_add, can_multiply, is_square};
 use crate::matrix::Matrix;
-use crate::operations::add_vec;
-use crate::util;
+use crate::vector::operations::add_vec;
+use crate::vector::util;
 
 pub fn add_matrices<T: std::marker::Copy + std::ops::Add<Output = T>>(
     matrix_1: Matrix<T>,
