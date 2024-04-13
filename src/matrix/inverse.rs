@@ -1,7 +1,4 @@
-use crate::{
-    error::{CustomErrors, SingularMatrixError},
-    matrix::adjugate,
-};
+use crate::error::{CustomErrors, SingularMatrixError};
 
 use super::{
     adjugate::get_adjugate,

@@ -1,6 +1,6 @@
 use crate::{error::CustomErrors, matrix::Matrix};
 
-use super::cofactor::{self, get_cofactor};
+use super::cofactor::get_cofactor;
 
 pub fn get_adjugate<
     T: Copy

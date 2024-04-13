@@ -1,17 +1,18 @@
-use crate::matrix::{operations::get_determinant, Matrix};
+use matrix::inverse::cramer_inverse;
+
+use crate::matrix::Matrix;
 
 pub mod algebra;
 pub mod error;
 pub mod matrix;
-pub mod operations;
-pub mod util;
+pub mod vector;
 fn main() {
-    let vec_1 = vec![1.0, 1.0, 1.0];
-    let vec_2 = vec![1.0, 1.0, 1.0];
+    let _vec_1 = vec![1.0, 1.0, 1.0];
+    let _vec_2 = vec![1.0, 1.0, 1.0];
 
-    let vec3 = vec![1.0, 1.0];
-    let vec4 = vec![1.0, 1.0];
-    let vec5 = vec![1.0, 1.0];
+    let _vec3 = vec![1.0, 1.0];
+    let _vec4 = vec![1.0, 1.0];
+    let _vec5 = vec![1.0, 1.0];
 
     // let res1 = operations::add_vec(&vec_1, &vec_2);
     // let res2 = operations::sub_vec(&vec_1, &vec_2);
@@ -37,7 +38,7 @@ fn main() {
     let a: i32 = 8;
     let b = 2;
 
-    let c: i32 = a.rem_euclid(b);
+    let _c: i32 = a.rem_euclid(b);
     // println!("{:?}", m7)
 
     let rows = vec![
@@ -50,7 +51,7 @@ fn main() {
     let m = Matrix::new(rows).unwrap();
     let determinant = matrix::operations::get_determinant(&m);
 
-    println!("DETERMINANT: {:?}", determinant)
+    println!("DETERMINANT: {:?}", determinant);
     // let size: usize = v.len();
     // let mut v = vec![];
     // let perms = util::heap_permutation(&mut v, size);
@@ -61,4 +62,12 @@ fn main() {
     //     println!("Sign {:?}",sign);
 
     // }
+
+    let rows = vec![vec![1, 1, 1], vec![3, 2, 1], vec![2, 1, 3]];
+
+    let m = Matrix::new(rows).unwrap();
+
+    let inverse = cramer_inverse(&m);
+
+    println!("{:?}", inverse)
 }
