@@ -1,4 +1,4 @@
-use crate::{matrix::Matrix, util::get_permutation_sign};
+use crate::matrix::{operations::get_determinant, Matrix};
 
 pub mod algebra;
 pub mod error;
@@ -6,7 +6,6 @@ pub mod matrix;
 pub mod operations;
 pub mod util;
 fn main() {
-    println!("Hello, world!");
     let vec_1 = vec![1.0, 1.0, 1.0];
     let vec_2 = vec![1.0, 1.0, 1.0];
 
@@ -39,13 +38,17 @@ fn main() {
     let b = 2;
 
     let c: i32 = a.rem_euclid(b);
-    println!("{}", c);
     // println!("{:?}", m7)
 
-    let rows = vec![vec![1, 1, -1], vec![-2, 4, 2], vec![3, 3, 3]];
+    let rows = vec![
+        vec![5, 1, -1, 0],
+        vec![-2, 4, 2, -1],
+        vec![3, 3, 3, 3],
+        vec![1, 2, 3, 4],
+    ];
 
     let m = Matrix::new(rows).unwrap();
-    let determinant = matrix::get_determinant(&m);
+    let determinant = matrix::operations::get_determinant(&m);
 
     println!("DETERMINANT: {:?}", determinant)
     // let size: usize = v.len();
