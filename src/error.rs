@@ -16,12 +16,16 @@ pub struct NonUniformError;
 pub struct NotImplementedError;
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct SingularMatrixError;
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum CustomErrors {
     EmptyVector(EmptyVectorError),
     Mismatch(MismatchError),
     NonUniform(NonUniformError),
     BadType(BadTypeError),
     NotImplemented(NotImplementedError),
+    SingularMatrix(SingularMatrixError),
 }
 
 impl fmt::Display for CustomErrors {
