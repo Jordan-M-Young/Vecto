@@ -100,6 +100,16 @@ let matrix = Matrix::new(rows_1).unwrap();
 let solved = algebra::solve_system(matrix);
 ```
 
+### Polynomials
+
+```rust
+
+// get roots
+let equation = "3x - 2".to_string();
+let poly = Polynomial::new(equation);
+let roots = poly.get_roots();
+
+```
 
 
 

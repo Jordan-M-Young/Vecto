@@ -1,6 +1,9 @@
 use matrix::inverse::cramer_inverse;
 
-use crate::{matrix::Matrix, polynomial::parse_equation};
+use crate::{
+    matrix::Matrix,
+    polynomial::{parse_equation, Polynomial},
+};
 
 pub mod algebra;
 pub mod error;
@@ -78,7 +81,7 @@ fn main() {
 
     let equation = "3x - 2".to_string();
 
-    let poly = parse_equation(&equation);
+    let poly = Polynomial::new(equation);
     let roots = poly.get_roots();
 
     println!("{:?}", poly);
