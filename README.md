@@ -78,6 +78,11 @@ let rows = vec![vec![1, 1, -1], vec![-2, 4, 2], vec![3, 3, 3]];
 let m = Matrix::new(rows).unwrap();
 let determinant = matrix::get_determinant(&m);
 
+// get matrix inverse
+let rows = vec![vec![1, 1, 1], vec![3, 2, 1], vec![2, 1, 3]];
+let m = Matrix::new(rows).unwrap();
+let inverse = cramer_inverse(&m);
+
 ```
 
 ### Linear Algebra
