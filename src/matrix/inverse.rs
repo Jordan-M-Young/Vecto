@@ -44,6 +44,10 @@ pub fn cramer_inverse<
     }
 }
 
+fn gaussian_inverse() {
+    println!("not implemented!")
+}
+
 #[cfg(test)]
 mod tests {
     use crate::matrix::Matrix;

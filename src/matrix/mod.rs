@@ -12,7 +12,7 @@ pub struct Matrix<T: Copy> {
     pub n: usize,
 }
 
-impl<T: Copy> Matrix<T> {
+impl<T: Copy + From<u8> + std::ops::AddAssign> Matrix<T> {
     pub fn new(rows: Vec<Vec<T>>) -> Result<Matrix<T>, CustomErrors> {
         let m = rows.len();
 
@@ -32,6 +32,16 @@ impl<T: Copy> Matrix<T> {
             }
         }
         Ok(Matrix { rows, m, n })
+    }
+    pub fn trace(&self) -> T {
+        let m = self.m;
+        let zero_cast: T = 0.into();
+        let mut trace: T = zero_cast;
+        let rows = &self.rows;
+        for i in 0..m {
+            trace += rows[i][i]
+        }
+        trace
     }
 
     pub fn transpose(&self) -> Matrix<T> {

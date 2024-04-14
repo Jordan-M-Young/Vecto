@@ -27,7 +27,9 @@ pub fn add_matrices<T: std::marker::Copy + std::ops::Add<Output = T>>(
     })
 }
 
-pub fn scalar_multiply<T: Copy + std::ops::Mul + std::ops::Mul<Output = T>>(
+pub fn scalar_multiply<
+    T: Copy + std::ops::Mul + std::ops::Mul<Output = T> + std::convert::From<u8> + std::ops::AddAssign,
+>(
     matrix: &Matrix<T>,
     scalar: T,
 ) -> Result<Matrix<T>, error::CustomErrors> {

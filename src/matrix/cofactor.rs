@@ -2,7 +2,7 @@ use crate::{error::CustomErrors, matrix::Matrix};
 
 use super::operations::get_determinant;
 
-pub fn get_minor<T: Copy>(
+pub fn get_minor<T: Copy + std::convert::From<u8> + std::ops::AddAssign>(
     row_pos: usize,
     col_pos: usize,
     matrix: &Matrix<T>,
