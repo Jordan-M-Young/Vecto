@@ -1,11 +1,13 @@
 use matrix::inverse::cramer_inverse;
 
-use crate::matrix::Matrix;
+use crate::{matrix::Matrix, polynomial::parse_equation};
 
 pub mod algebra;
 pub mod error;
 pub mod matrix;
+pub mod polynomial;
 pub mod vector;
+
 fn main() {
     let _vec_1 = vec![1.0, 1.0, 1.0];
     let _vec_2 = vec![1.0, 1.0, 1.0];
@@ -63,11 +65,22 @@ fn main() {
 
     // }
 
-    let rows = vec![vec![1, 1, 1], vec![3, 2, 1], vec![2, 1, 3]];
+    // let rows = vec![vec![1, 1, 1], vec![3, 2, 1], vec![2, 1, 3]];
 
-    let m = Matrix::new(rows).unwrap();
+    // let m = Matrix::new(rows).unwrap();
 
-    let inverse = cramer_inverse(&m);
+    // let inverse = cramer_inverse(&m);
 
-    println!("{:?}", inverse)
+    // println!("{:?}", inverse);
+
+    // let trace = m.trace();
+    // println!("{}",trace)
+
+    let equation = "3x - 2".to_string();
+
+    let poly = parse_equation(&equation);
+    let roots = poly.get_roots();
+
+    println!("{:?}", poly);
+    println!("{:?}", roots);
 }
