@@ -51,7 +51,12 @@ pub fn sub_matrices<T: std::marker::Copy + std::ops::Sub<Output = T>>(
 }
 
 pub fn scalar_multiply<
-    T: Copy + std::ops::Mul + std::ops::Mul<Output = T> + std::convert::From<u8> + std::ops::AddAssign,
+    T: Copy
+        + Into<f64>
+        + std::ops::Mul
+        + std::ops::Mul<Output = T>
+        + std::convert::From<u8>
+        + std::ops::AddAssign,
 >(
     matrix: &Matrix<T>,
     scalar: T,
@@ -107,8 +112,8 @@ pub fn scalar_divide<T: Copy + Into<f64> + std::ops::Div + std::ops::Div<Output 
 pub fn multiply_matrices<
     T: Copy + From<u8> + std::ops::Mul + std::ops::AddAssign<<T as std::ops::Mul>::Output>,
 >(
-    matrix_1: Matrix<T>,
-    matrix_2: Matrix<T>,
+    matrix_1: &Matrix<T>,
+    matrix_2: &Matrix<T>,
 ) -> Result<Matrix<T>, error::CustomErrors> {
     if matrix_1.m == 0 || matrix_1.n == 0 || matrix_2.m == 0 || matrix_2.n == 0 {
         return Err(error::CustomErrors::EmptyVector(error::EmptyVectorError));
@@ -229,7 +234,7 @@ mod tests {
         let m2 = Matrix::new(vec![vec3, vec4, vec5]).unwrap();
 
         let m3: Matrix<f64> = Matrix::new(vec![vec![3.0, 3.0], vec![3.0, 3.0]]).unwrap();
-        match multiply_matrices(m, m2) {
+        match multiply_matrices(&m, &m2) {
             Ok(matrix) => assert_eq!(matrix, m3),
             _ => assert!(false),
         }

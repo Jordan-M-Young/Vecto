@@ -11,6 +11,7 @@ pub fn get_adjugate<
         + std::convert::From<i32>
         + std::ops::Mul
         + std::ops::Mul<Output = T>
+        + Into<f64>
         + std::ops::AddAssign,
 >(
     matrix: &Matrix<T>,

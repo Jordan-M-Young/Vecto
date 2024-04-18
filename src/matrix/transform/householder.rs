@@ -6,6 +6,7 @@ use crate::{
     },
     vector::util::create_identity_matrix,
 };
+use core::ops::AddAssign;
 
 pub fn get_sign<T: From<u8> + std::cmp::PartialOrd>(element: T) -> f64 {
     let mut sign: f64 = 1.0;
@@ -63,7 +64,9 @@ pub fn construct_hh_vector<T: Copy + Into<f64>>(
     hh_vector
 }
 
-pub fn house_holder_transform<T: Copy + Into<f64> + std::cmp::PartialOrd + From<u8> + From<f64>>(
+pub fn get_house_holder_matrix<
+    T: Copy + Into<f64> + std::cmp::PartialOrd + From<u8> + From<f64>,
+>(
     matrix: &Matrix<T>,
 ) -> Result<Matrix<f64>, CustomErrors> {
     let k = 1;
@@ -85,7 +88,7 @@ pub fn house_holder_transform<T: Copy + Into<f64> + std::cmp::PartialOrd + From<
         Err(err) => return Err(err),
     };
 
-    let v_prod = match multiply_matrices(v, vt) {
+    let v_prod = match multiply_matrices(&v, &vt) {
         Ok(v_prod) => v_prod,
         Err(err) => return Err(err),
     };
@@ -100,7 +103,25 @@ pub fn house_holder_transform<T: Copy + Into<f64> + std::cmp::PartialOrd + From<
         Err(err) => return Err(err),
     };
 
-    println!("{:?}", scaled_v_prod);
-
     sub_matrices(identity_matrix, scaled_v_prod)
+}
+
+pub fn house_holder_transform<
+    T: AddAssign + Copy + From<u8> + From<f64> + std::cmp::PartialOrd + Into<f64>,
+>(
+    matrix: &Matrix<T>,
+) -> Result<Matrix<f64>, CustomErrors> {
+    let hh_matrix = match get_house_holder_matrix(matrix) {
+        Ok(hh_matrix) => hh_matrix,
+        Err(err) => return Err(err),
+    };
+
+    let cast_matrix = matrix.cast_f64();
+
+    let prod1: Matrix<f64> = match multiply_matrices(&hh_matrix, &cast_matrix) {
+        Ok(prod1) => prod1,
+        Err(err) => return Err(err),
+    };
+
+    multiply_matrices(&prod1, &hh_matrix)
 }

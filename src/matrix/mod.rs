@@ -14,7 +14,7 @@ pub struct Matrix<T: Copy> {
     pub n: usize,
 }
 
-impl<T: Copy + From<u8> + std::ops::AddAssign> Matrix<T> {
+impl<T: Copy + From<u8> + Into<f64> + std::ops::AddAssign> Matrix<T> {
     pub fn new(rows: Vec<Vec<T>>) -> Result<Matrix<T>, CustomErrors> {
         let m = rows.len();
 
@@ -63,5 +63,26 @@ impl<T: Copy + From<u8> + std::ops::AddAssign> Matrix<T> {
             m: self.n,
             n: self.m,
         };
+    }
+
+    pub fn cast_f64(&self) -> Matrix<f64> {
+        let m = self.m;
+        let n = self.n;
+        let rows = &self.rows;
+        let mut new_rows: Vec<Vec<f64>> = vec![];
+        for i in 0..m {
+            let mut new_row: Vec<f64> = vec![];
+            for j in 0..n {
+                let new_element: f64 = rows[i][j].into();
+                new_row.push(new_element)
+            }
+            new_rows.push(new_row)
+        }
+
+        Matrix {
+            rows: new_rows,
+            m,
+            n,
+        }
     }
 }

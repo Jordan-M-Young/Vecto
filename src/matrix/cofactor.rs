@@ -2,7 +2,7 @@ use crate::{error::CustomErrors, matrix::Matrix};
 
 use super::operations::get_determinant;
 
-pub fn get_minor<T: Copy + std::convert::From<u8> + std::ops::AddAssign>(
+pub fn get_minor<T: Copy + Into<f64> + std::convert::From<u8> + std::ops::AddAssign>(
     row_pos: usize,
     col_pos: usize,
     matrix: &Matrix<T>,
@@ -47,6 +47,7 @@ pub fn get_cofactor<
         + std::convert::From<i32>
         + std::ops::Mul
         + std::ops::Mul<Output = T>
+        + Into<f64>
         + std::ops::AddAssign,
 >(
     matrix: &Matrix<T>,
