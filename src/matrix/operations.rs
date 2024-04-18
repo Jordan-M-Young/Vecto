@@ -1,7 +1,7 @@
 use crate::error::{self, CustomErrors};
 use crate::matrix::logic::{can_add, can_multiply, is_square};
 use crate::matrix::Matrix;
-use crate::vector::operations::add_vec;
+use crate::vector::operations::{add_vec, sub_vec};
 use crate::vector::util;
 
 pub fn add_matrices<T: std::marker::Copy + std::ops::Add<Output = T>>(
@@ -15,6 +15,29 @@ pub fn add_matrices<T: std::marker::Copy + std::ops::Add<Output = T>>(
     let mut new_matrix_rows: Vec<Vec<T>> = vec![];
     for i in 0..matrix_1.m {
         let new_row = match add_vec(&matrix_1.rows[i], &matrix_2.rows[i]) {
+            Ok(vec) => vec,
+            Err(e) => return Err(e),
+        };
+        new_matrix_rows.push(new_row)
+    }
+    Ok(Matrix {
+        rows: new_matrix_rows,
+        m: matrix_1.m,
+        n: matrix_1.n,
+    })
+}
+
+pub fn sub_matrices<T: std::marker::Copy + std::ops::Sub<Output = T>>(
+    matrix_1: Matrix<T>,
+    matrix_2: Matrix<T>,
+) -> Result<Matrix<T>, error::CustomErrors> {
+    if !can_add(&matrix_1, &matrix_2) {
+        return Err(error::CustomErrors::Mismatch(error::MismatchError));
+    }
+
+    let mut new_matrix_rows: Vec<Vec<T>> = vec![];
+    for i in 0..matrix_1.m {
+        let new_row = match sub_vec(&matrix_1.rows[i], &matrix_2.rows[i]) {
             Ok(vec) => vec,
             Err(e) => return Err(e),
         };

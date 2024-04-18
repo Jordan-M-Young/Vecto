@@ -1,8 +1,10 @@
 pub mod adjugate;
 pub mod cofactor;
+pub mod eigen;
 pub mod inverse;
 pub mod logic;
 pub mod operations;
+pub mod transform;
 use crate::error::{CustomErrors, EmptyVectorError, NonUniformError};
 
 #[derive(Debug, Clone, PartialEq)]
