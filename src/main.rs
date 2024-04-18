@@ -70,21 +70,17 @@ fn main() {
     // let house_holder = sub_matrices(identity, v_product);
     // println!("{:?}", house_holder);
 
-
     let rows_1: Vec<Vec<f64>> = vec![
         vec![4.0, 1.0, -2.0, 2.0],
         vec![1.0, 2.0, 0.0, 1.0],
         vec![-2.0, 0.0, 3.0, -2.0],
-        vec![2.0,1.0,-2.0,-1.0]
+        vec![2.0, 1.0, -2.0, -1.0],
     ];
     let matrix = Matrix::new(rows_1).unwrap();
 
     let hh_matrix = house_holder_transform(&matrix);
 
-    println!("{:?}",hh_matrix)
-
-
-
+    println!("{:?}", hh_matrix)
 }
 
 // let determinant = matrix::operations::get_determinant(&m);
