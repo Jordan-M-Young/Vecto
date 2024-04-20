@@ -96,8 +96,18 @@ let rows_1: Vec<Vec<f64>> = vec![
     vec![0.0, 0.0, 5.0, 5.0],
 ];
 let matrix = Matrix::new(rows_1).unwrap();
-
 let solved = algebra::solve_system(matrix);
+
+//tridiagonalize matrix
+let rows_1: Vec<Vec<f64>> = vec![
+    vec![4.0, 1.0, -2.0, 2.0],
+    vec![1.0, 2.0, 0.0, 1.0],
+    vec![-2.0, 0.0, 3.0, -2.0],
+    vec![2.0, 1.0, -2.0, -1.0],
+];
+let matrix = Matrix::new(rows_1).unwrap();
+let m1 = tridiagonalize(&matrix);
+
 ```
 
 ### Polynomials
