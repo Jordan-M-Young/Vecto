@@ -1,7 +1,7 @@
 use crate::error::{self, CustomErrors};
 use crate::matrix::logic::{can_add, can_multiply, is_square};
 use crate::matrix::Matrix;
-use crate::vector::operations::add_vec;
+use crate::vector::operations::{add_vec, sub_vec};
 use crate::vector::util;
 
 pub fn add_matrices<T: std::marker::Copy + std::ops::Add<Output = T>>(
@@ -27,8 +27,36 @@ pub fn add_matrices<T: std::marker::Copy + std::ops::Add<Output = T>>(
     })
 }
 
+pub fn sub_matrices<T: std::marker::Copy + std::ops::Sub<Output = T>>(
+    matrix_1: Matrix<T>,
+    matrix_2: Matrix<T>,
+) -> Result<Matrix<T>, error::CustomErrors> {
+    if !can_add(&matrix_1, &matrix_2) {
+        return Err(error::CustomErrors::Mismatch(error::MismatchError));
+    }
+
+    let mut new_matrix_rows: Vec<Vec<T>> = vec![];
+    for i in 0..matrix_1.m {
+        let new_row = match sub_vec(&matrix_1.rows[i], &matrix_2.rows[i]) {
+            Ok(vec) => vec,
+            Err(e) => return Err(e),
+        };
+        new_matrix_rows.push(new_row)
+    }
+    Ok(Matrix {
+        rows: new_matrix_rows,
+        m: matrix_1.m,
+        n: matrix_1.n,
+    })
+}
+
 pub fn scalar_multiply<
-    T: Copy + std::ops::Mul + std::ops::Mul<Output = T> + std::convert::From<u8> + std::ops::AddAssign,
+    T: Copy
+        + Into<f64>
+        + std::ops::Mul
+        + std::ops::Mul<Output = T>
+        + std::convert::From<u8>
+        + std::ops::AddAssign,
 >(
     matrix: &Matrix<T>,
     scalar: T,
@@ -84,8 +112,8 @@ pub fn scalar_divide<T: Copy + Into<f64> + std::ops::Div + std::ops::Div<Output 
 pub fn multiply_matrices<
     T: Copy + From<u8> + std::ops::Mul + std::ops::AddAssign<<T as std::ops::Mul>::Output>,
 >(
-    matrix_1: Matrix<T>,
-    matrix_2: Matrix<T>,
+    matrix_1: &Matrix<T>,
+    matrix_2: &Matrix<T>,
 ) -> Result<Matrix<T>, error::CustomErrors> {
     if matrix_1.m == 0 || matrix_1.n == 0 || matrix_2.m == 0 || matrix_2.n == 0 {
         return Err(error::CustomErrors::EmptyVector(error::EmptyVectorError));
@@ -206,7 +234,7 @@ mod tests {
         let m2 = Matrix::new(vec![vec3, vec4, vec5]).unwrap();
 
         let m3: Matrix<f64> = Matrix::new(vec![vec![3.0, 3.0], vec![3.0, 3.0]]).unwrap();
-        match multiply_matrices(m, m2) {
+        match multiply_matrices(&m, &m2) {
             Ok(matrix) => assert_eq!(matrix, m3),
             _ => assert!(false),
         }

@@ -44,7 +44,7 @@ pub fn cramer_inverse<
     }
 }
 
-fn gaussian_inverse() {
+fn _gaussian_inverse() {
     println!("not implemented!")
 }
 
