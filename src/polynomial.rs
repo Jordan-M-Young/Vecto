@@ -4,8 +4,8 @@ use std::collections::HashMap;
 pub struct Polynomial {
     order: u8,
     coeffs: HashMap<String, i32>,
-    equation: String,
-    terms: Vec<String>,
+    _equation: String,
+    _terms: Vec<String>,
 }
 
 impl Polynomial {
@@ -83,8 +83,8 @@ pub fn parse_equation(equation: &str) -> Polynomial {
     Polynomial {
         order,
         coeffs,
-        equation: simplified_eq,
-        terms,
+        _equation: simplified_eq,
+        _terms: terms,
     }
 }
 

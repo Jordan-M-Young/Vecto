@@ -1,17 +1,5 @@
-use std::fmt::Debug;
-
-use crate::matrix::operations::sub_matrices;
-use crate::matrix::transform::householder::house_holder_transform;
-use crate::vector::util::create_identity_matrix;
-use crate::{
-    matrix::{
-        operations::{multiply_matrices, scalar_multiply},
-        Matrix,
-    },
-    polynomial::{parse_equation, Polynomial},
-};
-use matrix::eigen::get_expanded_eigen_polynomial;
-use matrix::inverse::cramer_inverse;
+use matrix::transform::tridiagonalize::tridiagonalize;
+use matrix::Matrix;
 
 pub mod algebra;
 pub mod error;
@@ -37,21 +25,7 @@ fn main() {
     // let res7 = operations::scalar_multiply(&vec_1, 3.0);
 
     // let m7 = matrix::multiply_matrices(m2, m);
-    let rows_1: Vec<Vec<f64>> = vec![
-        vec![1.0, 4.0, 3.0, 3.0],
-        vec![3.0, 1.0, 0.0, 4.0],
-        vec![0.0, 0.0, 5.0, 5.0],
-    ];
-    let matrix = Matrix::new(rows_1).unwrap();
 
-    let solved = algebra::solve_system(matrix);
-
-    println!("{:?}", solved);
-
-    let a: i32 = 8;
-    let b = 2;
-
-    let _c: i32 = a.rem_euclid(b);
     // println!("{:?}", m7)
     // let rows: Vec<Vec<f64>> = vec![
     //     vec![0.0],
@@ -77,10 +51,21 @@ fn main() {
         vec![2.0, 1.0, -2.0, -1.0],
     ];
     let matrix = Matrix::new(rows_1).unwrap();
+    let m1 = tridiagonalize(&matrix);
+    println!("{:?}", m1)
 
-    let hh_matrix = house_holder_transform(&matrix);
+    // let m =  Matrix {
+    //     rows: vec![
+    //         vec![4.0, -3.000000000000001, 1.332267629550197e-16, -9.325873406851313e-16],
+    //         vec![-3.000000000000001, 3.3333333333333357, -1.666666666666667, -2.220446049250313e-16],
+    //         vec![1.332267629550197e-16, -1.6666666666666665, -1.3200000000000016, 0.9066666666666631],
+    //         vec![-9.325873406851313e-16, 0.0, 0.9066666666666627, 1.986666666666669]],
+    //     m: 4,
+    //     n: 4 };
 
-    println!("{:?}", hh_matrix)
+    // println!("{:?}",is_tridiagonal(&m));
+
+    // let m = tridiagonalize(&matrix);
 }
 
 // let determinant = matrix::operations::get_determinant(&m);

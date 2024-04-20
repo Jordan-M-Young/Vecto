@@ -51,12 +51,21 @@ pub fn construct_hh_vector<T: Copy + Into<f64>>(
 ) -> Vec<f64> {
     let rows = &matrix.rows;
     let m = matrix.m;
-    let v1 = 0.0;
-    let e2: f64 = rows[k][k - 1].into();
-    let v2 = (e2 - alpha) / (2.0 * r);
 
-    let mut hh_vector: Vec<f64> = vec![v1, v2];
-    for j in 2..m {
+    let mut hh_vector: Vec<f64> = vec![];
+    for j in 0..m {
+        if j <= k - 1 {
+            hh_vector.push(0.0);
+            continue;
+        }
+
+        if j == k {
+            let e2: f64 = rows[k][k - 1].into();
+            let v2 = (e2 - alpha) / (2.0 * r);
+            hh_vector.push(v2);
+            continue;
+        }
+
         let ej: f64 = rows[j][k - 1].into();
         hh_vector.push(ej / (2.0 * r))
     }
@@ -68,8 +77,8 @@ pub fn get_house_holder_matrix<
     T: Copy + Into<f64> + std::cmp::PartialOrd + From<u8> + From<f64>,
 >(
     matrix: &Matrix<T>,
+    k: usize,
 ) -> Result<Matrix<f64>, CustomErrors> {
-    let k = 1;
     let alpha = gen_alpha(&matrix, k);
     let r = get_r(&matrix, alpha, k);
     let hh_row = construct_hh_vector(matrix, alpha, r, k);
@@ -110,11 +119,14 @@ pub fn house_holder_transform<
     T: AddAssign + Copy + From<u8> + From<f64> + std::cmp::PartialOrd + Into<f64>,
 >(
     matrix: &Matrix<T>,
+    k: usize,
 ) -> Result<Matrix<f64>, CustomErrors> {
-    let hh_matrix = match get_house_holder_matrix(matrix) {
+    let hh_matrix = match get_house_holder_matrix(matrix, k) {
         Ok(hh_matrix) => hh_matrix,
         Err(err) => return Err(err),
     };
+
+    println!("HH: {:?}", &hh_matrix);
 
     let cast_matrix = matrix.cast_f64();
 
