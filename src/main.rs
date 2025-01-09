@@ -4,6 +4,7 @@ use matrix::Matrix;
 pub mod algebra;
 pub mod error;
 pub mod matrix;
+pub mod models;
 pub mod polynomial;
 pub mod vector;
 
@@ -44,15 +45,15 @@ fn main() {
     // let house_holder = sub_matrices(identity, v_product);
     // println!("{:?}", house_holder);
 
-    let rows_1: Vec<Vec<f64>> = vec![
-        vec![4.0, 1.0, -2.0, 2.0],
-        vec![1.0, 2.0, 0.0, 1.0],
-        vec![-2.0, 0.0, 3.0, -2.0],
-        vec![2.0, 1.0, -2.0, -1.0],
-    ];
-    let matrix = Matrix::new(rows_1).unwrap();
-    let m1 = tridiagonalize(&matrix);
-    println!("{:?}", m1)
+    // let rows_1: Vec<Vec<f64>> = vec![
+    //     vec![4.0, 1.0, -2.0, 2.0],
+    //     vec![1.0, 2.0, 0.0, 1.0],
+    //     vec![-2.0, 0.0, 3.0, -2.0],
+    //     vec![2.0, 1.0, -2.0, -1.0],
+    // ];
+    // let matrix = Matrix::new(rows_1).unwrap();
+    // let m1 = tridiagonalize(&matrix);
+    // println!("{:?}", m1);
 
     // let m =  Matrix {
     //     rows: vec![
@@ -66,6 +67,15 @@ fn main() {
     // println!("{:?}",is_tridiagonal(&m));
 
     // let m = tridiagonalize(&matrix);
+    let x: Vec<Vec<f64>> = vec![vec![1.0, 1.0], vec![1.0, 2.0], vec![1.0, 3.0]];
+    let y: Vec<Vec<f64>> = vec![vec![1.0], vec![2.0], vec![3.0]];
+
+    let features = Matrix::new(x).unwrap();
+    let targets = Matrix::new(y).unwrap();
+
+    let betas = models::linear_regression(&features, &targets);
+
+    println!("{:?}", betas)
 }
 
 // let determinant = matrix::operations::get_determinant(&m);
