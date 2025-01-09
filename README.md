@@ -1,7 +1,7 @@
 # Vecto
-Library for Vectors, Matrices and Linear Algebra.
+Library for Vectors, Matrices, Linear Algebra and Machine Learning.
 
- Whether its for lightning fast cosine-similarity calculations, efficient system of equation solving, linear algebra computations, or just simple vector/matrix manipulation, Vecto has you covered.
+ Whether its for lightning fast cosine-similarity calculations, efficient system of equation solving, linear algebra computations, or Machine Learning models, Vecto has you covered. 
 
 
 ## Build
@@ -109,6 +109,29 @@ let matrix = Matrix::new(rows_1).unwrap();
 let m1 = tridiagonalize(&matrix);
 
 ```
+### Machine Learning
+
+```rust
+
+// linear regression
+let x: Vec<Vec<f64>> = vec![
+    vec![1.0, 1.0],
+    vec![1.0, 2.0],
+    vec![1.0, 3.0]
+];
+let y: Vec<Vec<f64>> = vec![vec![1.0],vec![2.0], vec![3.0]];
+
+let features = Matrix::new(x).unwrap();
+let targets = Matrix::new(y).unwrap();
+
+let betas = models::linear_regression(&features, &targets);
+
+println!("{:?}",betas)
+
+
+
+```
+
 
 ### Polynomials
 
