@@ -111,7 +111,7 @@ let m1 = tridiagonalize(&matrix);
 ```
 ### Machine Learning
 
-```rust
+```rust 
 
 // linear regression
 let x: Vec<Vec<f64>> = vec![
