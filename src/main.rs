@@ -1,4 +1,3 @@
-use matrix::transform::tridiagonalize::tridiagonalize;
 use matrix::Matrix;
 
 pub mod algebra;
