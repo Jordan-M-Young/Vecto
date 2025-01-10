@@ -1,7 +1,5 @@
 # Vecto
-Linear Algebra and Machine Learning Library.
-
- Whether its for lightning fast cosine-similarity calculations, efficient system of equation solving, linear algebra computations, or Machine Learning models, Vecto has you covered. 
+A Linear Algebra library with Machine Learning aspirations. Check out what this can do below.
 
 
 ## Build
