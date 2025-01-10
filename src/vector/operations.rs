@@ -92,7 +92,9 @@ pub fn mean<T: Copy + Into<f64> + From<u8> + Add<Output = T> + std::ops::AddAssi
     return Ok(mean);
 }
 
-pub fn stddev<T: Copy + From<u8> + Into<f64> + Add<Output = T> +  AddAssign>(vec_1: &Vec<T>) -> Result<f64, CustomErrors> {
+pub fn stddev<T: Copy + From<u8> + Into<f64> + Add<Output = T> + AddAssign>(
+    vec_1: &Vec<T>,
+) -> Result<f64, CustomErrors> {
     let l1 = vec_1.len();
     let mut n = 0.0;
     let mn = match mean(&vec_1) {
@@ -101,7 +103,6 @@ pub fn stddev<T: Copy + From<u8> + Into<f64> + Add<Output = T> +  AddAssign>(vec
             return Err(CustomErrors::Mismatch(MismatchError));
         }
     };
-
 
     let mut sqsum = 0.0;
 
@@ -113,7 +114,6 @@ pub fn stddev<T: Copy + From<u8> + Into<f64> + Add<Output = T> +  AddAssign>(vec
     }
 
     sqsum /= n;
-    
 
     Ok(sqsum.powf(0.5))
 }

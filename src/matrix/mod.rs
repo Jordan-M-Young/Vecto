@@ -97,7 +97,7 @@ pub fn standardize<
         + std::ops::AddAssign,
 >(
     matrix: &Matrix<T>,
-) ->Result<Matrix<f64>,CustomErrors> {
+) -> Result<Matrix<f64>, CustomErrors> {
     let m = matrix.m;
     let n = matrix.n;
     let mut new_rows: Vec<Vec<f64>> = vec![];
@@ -107,25 +107,19 @@ pub fn standardize<
         let row = &rows[i];
         let mn = match mean(&row) {
             Ok(mn) => mn,
-            Err(_) => {
-                return Err(CustomErrors::EmptyVector(EmptyVectorError))
-            }
+            Err(_) => return Err(CustomErrors::EmptyVector(EmptyVectorError)),
         };
         let stdd = match stddev(&row) {
             Ok(stdd) => stdd,
-            Err(_) => {
-                return Err(CustomErrors::EmptyVector(EmptyVectorError))
-            }
+            Err(_) => return Err(CustomErrors::EmptyVector(EmptyVectorError)),
         };
         for j in 0..n {
             let old_val: f64 = rows[i][j].into();
             let mut new_val = old_val - mn;
             new_val /= stdd;
             new_row.push(new_val)
-
         }
         new_rows.push(new_row)
-
     }
 
     let x: Matrix<f64> = Matrix::new(new_rows).unwrap();
