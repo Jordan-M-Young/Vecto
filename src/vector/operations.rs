@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, AddAssign, Mul, Sub};
 
 use crate::error::{BadTypeError, CustomErrors, EmptyVectorError, MismatchError};
 
@@ -90,6 +90,32 @@ pub fn mean<T: Copy + Into<f64> + From<u8> + Add<Output = T> + std::ops::AddAssi
 
     let mean = sum / n_elements;
     return Ok(mean);
+}
+
+pub fn stddev<T: Copy + From<u8> + Into<f64> + Add<Output = T> +  AddAssign>(vec_1: &Vec<T>) -> Result<f64, CustomErrors> {
+    let l1 = vec_1.len();
+    let mut n = 0.0;
+    let mn = match mean(&vec_1) {
+        Ok(v) => v,
+        Err(_) => {
+            return Err(CustomErrors::Mismatch(MismatchError));
+        }
+    };
+
+
+    let mut sqsum = 0.0;
+
+    for i in 0..l1 {
+        let v: f64 = vec_1[i].into();
+        let sq = (v - mn).powf(2.0);
+        sqsum += sq;
+        n += 1.0;
+    }
+
+    sqsum /= n;
+    
+
+    Ok(sqsum.powf(0.5))
 }
 
 pub fn dot_product<

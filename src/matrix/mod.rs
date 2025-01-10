@@ -6,6 +6,7 @@ pub mod logic;
 pub mod operations;
 pub mod transform;
 use crate::error::{CustomErrors, EmptyVectorError, NonUniformError};
+use crate::vector::operations::{mean, stddev};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Matrix<T: Copy> {
@@ -85,4 +86,48 @@ impl<T: Copy + From<u8> + Into<f64> + std::ops::AddAssign> Matrix<T> {
             n,
         }
     }
+}
+
+pub fn standardize<
+    T: Into<f64>
+        + std::marker::Copy
+        + std::convert::From<u8>
+        + std::ops::Add<Output = T>
+        + std::ops::Sub<f64>
+        + std::ops::AddAssign,
+>(
+    matrix: &Matrix<T>,
+) ->Result<Matrix<f64>,CustomErrors> {
+    let m = matrix.m;
+    let n = matrix.n;
+    let mut new_rows: Vec<Vec<f64>> = vec![];
+    let rows = &matrix.rows;
+    for i in 0..m {
+        let mut new_row: Vec<f64> = vec![];
+        let row = &rows[i];
+        let mn = match mean(&row) {
+            Ok(mn) => mn,
+            Err(_) => {
+                return Err(CustomErrors::EmptyVector(EmptyVectorError))
+            }
+        };
+        let stdd = match stddev(&row) {
+            Ok(stdd) => stdd,
+            Err(_) => {
+                return Err(CustomErrors::EmptyVector(EmptyVectorError))
+            }
+        };
+        for j in 0..n {
+            let old_val: f64 = rows[i][j].into();
+            let mut new_val = old_val - mn;
+            new_val /= stdd;
+            new_row.push(new_val)
+
+        }
+        new_rows.push(new_row)
+
+    }
+
+    let x: Matrix<f64> = Matrix::new(new_rows).unwrap();
+    Ok(x)
 }
