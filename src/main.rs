@@ -1,7 +1,7 @@
-use matrix::transform::tridiagonalize::tridiagonalize;
 use matrix::Matrix;
 
 pub mod algebra;
+pub mod data;
 pub mod error;
 pub mod matrix;
 pub mod models;
