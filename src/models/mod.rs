@@ -15,10 +15,6 @@ pub fn linear_regression(x: &Matrix<f64>, y: &Matrix<f64>) -> Matrix<f64> {
     beta
 }
 
-
-
-
-
 #[cfg(test)]
 mod tests {
 
