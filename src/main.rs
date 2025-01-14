@@ -1,4 +1,4 @@
-use matrix::Matrix;
+// use matrix::Matrix;
 
 pub mod algebra;
 pub mod data;
@@ -9,12 +9,18 @@ pub mod polynomial;
 pub mod vector;
 
 fn main() {
-    let _vec_1 = vec![1.0, 1.0, 1.0];
-    let _vec_2 = vec![1.0, 1.0, 1.0];
+    // let rows = vec![
+    //     vec![0.0, 0.0],
+    //     vec![-1.0, -1.0],
+    //     vec![2.0, 2.0],
+    //     vec![3.0, 3.0],
+    // ];
+    // let m = Matrix::new(rows).unwrap();
+    // let n_centroids = 3;
+    // let centroids = models::cluster::kpp_init(&m, n_centroids).unwrap();
 
-    let _vec3 = vec![1.0, 1.0];
-    let _vec4 = vec![1.0, 1.0];
-    let _vec5 = vec![1.0, 1.0];
+    // let _targ_len: usize = 3;
+    // println!("{:?}", centroids);
 
     // let res1 = operations::add_vec(&vec_1, &vec_2);
     // let res2 = operations::sub_vec(&vec_1, &vec_2);
@@ -67,15 +73,15 @@ fn main() {
     // println!("{:?}",is_tridiagonal(&m));
 
     // let m = tridiagonalize(&matrix);
-    let x: Vec<Vec<f64>> = vec![vec![1.0, 1.0], vec![1.0, 2.0], vec![1.0, 3.0]];
-    let y: Vec<Vec<f64>> = vec![vec![1.0], vec![2.0], vec![3.0]];
+    // let x: Vec<Vec<f64>> = vec![vec![1.0, 1.0], vec![1.0, 2.0], vec![1.0, 3.0]];
+    // let y: Vec<Vec<f64>> = vec![vec![1.0], vec![2.0], vec![3.0]];
 
-    let features = Matrix::new(x).unwrap();
-    let targets = Matrix::new(y).unwrap();
+    // let features = Matrix::new(x).unwrap();
+    // let targets = Matrix::new(y).unwrap();
 
-    let betas = models::linear_regression(&features, &targets);
+    // let betas = models::linear_regression(&features, &targets);
 
-    println!("{:?}", betas)
+    // println!("{:?}", betas)
 }
 
 // let determinant = matrix::operations::get_determinant(&m);
