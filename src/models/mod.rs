@@ -1,3 +1,4 @@
+pub mod cluster;
 use crate::matrix::{inverse::cramer_inverse, operations::multiply_matrices, Matrix};
 
 pub fn linear_regression(x: &Matrix<f64>, y: &Matrix<f64>) -> Matrix<f64> {
