@@ -1,4 +1,4 @@
-# Vecto
+# Pikus
 A Linear Algebra library with Machine Learning aspirations. Check out what this can do below.
 
 
