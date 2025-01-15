@@ -1,16 +1,17 @@
 use core::f64;
 use rand::prelude::*;
-use std::collections::HashMap;
 
 use crate::{
     error::{CustomErrors, MismatchError},
     matrix::Matrix,
+    vector::operations::{add_vec, scalar_divide},
 };
 
+#[derive(Debug)]
 pub struct ClusterResult {
     _centroids: Vec<Vec<f64>>,
     _n_centroids: i32,
-    _clusters: HashMap<i32, Vec<Vec<f64>>>,
+    _clusters: Vec<Vec<Vec<f64>>>,
 }
 
 pub fn cartesian_distance(p1: &Vec<f64>, p2: &Vec<f64>) -> Result<f64, CustomErrors> {
@@ -71,18 +72,87 @@ pub fn kpp_init(data: &Matrix<f64>, _n_centroids: i32) -> Result<Vec<Vec<f64>>, 
     Ok(centroids)
 }
 
+pub fn init_clusters(n_centroids: i32) -> Vec<Vec<Vec<f64>>> {
+    let mut clusters: Vec<Vec<Vec<f64>>> = vec![];
+
+    for _ in 0..n_centroids {
+        clusters.push(vec![])
+    }
+
+    clusters
+}
+
+pub fn new_centroids(clusters: &Vec<Vec<Vec<f64>>>) -> Result<Vec<Vec<f64>>, CustomErrors> {
+    let mut new_centroids: Vec<Vec<f64>> = vec![];
+    for c in clusters {
+        let mut new_centroid: Vec<f64> = vec![];
+        let mut scalar = 0.0;
+        for idx in 0..c.len() {
+            if idx == 0 {
+                new_centroid = c[idx].to_vec();
+            } else {
+                new_centroid = match add_vec(&new_centroid, &c[idx]) {
+                    Ok(val) => val.to_vec(),
+                    Err(_) => return Err(CustomErrors::Mismatch(MismatchError)),
+                }
+            }
+            scalar += 1.0;
+        }
+        new_centroid = match scalar_divide(&new_centroid, scalar) {
+            Ok(val) => val.to_vec(),
+            Err(err) => return Err(err),
+        };
+
+        new_centroids.push(new_centroid.to_vec());
+    }
+    Ok(new_centroids)
+}
+
 pub fn kmeans(data: &Matrix<f64>, n_centroids: i32) -> Result<ClusterResult, CustomErrors> {
-    let centroids: Vec<Vec<f64>> = match kpp_init(data, n_centroids) {
+    let mut centroids: Vec<Vec<f64>> = match kpp_init(data, n_centroids) {
         Ok(centroids) => centroids,
         Err(_) => return Err(CustomErrors::Mismatch(MismatchError)),
     };
-    let _clusters: HashMap<i32, Vec<Vec<f64>>> = HashMap::new();
-    let dummy_result = ClusterResult {
+    let mut clusters: Vec<Vec<Vec<f64>>> = vec![];
+    let mut converged: bool = false;
+    while !converged {
+        clusters = init_clusters(n_centroids);
+
+        for pt in &data.rows {
+            let mut min_dist = f64::MAX;
+            let mut min_idx: usize = 0;
+
+            for c in 0..centroids.len() {
+                let dist = match cartesian_distance(&pt, &centroids[c]) {
+                    Ok(dist) => dist,
+                    Err(_) => return Err(CustomErrors::Mismatch(MismatchError)),
+                };
+
+                if dist < min_dist {
+                    min_dist = dist;
+                    min_idx = c
+                }
+            }
+            clusters[min_idx].push(pt.to_vec())
+        }
+
+        let new_centroids = match new_centroids(&clusters) {
+            Ok(new_centroids) => new_centroids,
+            Err(err) => return Err(err),
+        };
+
+        if new_centroids == centroids {
+            converged = true
+        } else {
+            centroids = new_centroids
+        }
+    }
+
+    Ok(ClusterResult {
         _centroids: centroids,
+        _clusters: clusters,
         _n_centroids: n_centroids,
-        _clusters,
-    };
-    Ok(dummy_result)
+    })
 }
 
 #[cfg(test)]
@@ -92,16 +162,38 @@ mod tests {
     use crate::matrix::Matrix;
     use crate::models::cluster::kmeans;
 
-    use super::{cartesian_distance, kpp_init};
+    use super::{cartesian_distance, init_clusters, kpp_init, new_centroids};
 
     #[test]
     fn test_kmeans() {
-        let rows: Vec<Vec<f64>> = vec![vec![1.0, 1.0]];
+        let rows: Vec<Vec<f64>> = vec![
+            vec![0.0, 0.0],
+            vec![0.0, 0.5],
+            vec![0.5, 0.0],
+            vec![4.0, 4.0],
+            vec![4.5, 4.0],
+            vec![4.0, 5.0],
+        ];
+        let target_centroids_a: Vec<Vec<f64>> = vec![
+            vec![0.16666666666666666, 0.16666666666666666],
+            vec![4.166666666666667, 4.333333333333333],
+        ];
+        let target_centroids_b = vec![
+            vec![4.166666666666667, 4.333333333333333],
+            vec![0.16666666666666666, 0.16666666666666666],
+        ];
         let data = Matrix::new(rows).unwrap();
-        let n_centroids = 3;
+        let n_centroids = 2;
         let res = kmeans(&data, n_centroids).unwrap();
 
-        assert_eq!(res._n_centroids, n_centroids)
+        assert_eq!(res._n_centroids, n_centroids);
+        if res._centroids[0][0] == 0.16666666666666666 {
+            assert_eq!(res._centroids, target_centroids_a)
+        } else if res._centroids[0][0] == 4.166666666666667 {
+            assert_eq!(res._centroids, target_centroids_b)
+        } else {
+            assert_eq!(res._centroids, target_centroids_b)
+        }
     }
 
     #[test]
@@ -152,5 +244,29 @@ mod tests {
         } else {
             assert_eq!(centroids[1], vec![-1.0, -1.0])
         }
+    }
+
+    #[test]
+    fn test_cluster_init() {
+        let n_centroids = 3;
+        let c = init_clusters(n_centroids);
+        let targ_size: usize = 3;
+        assert_eq!(targ_size, c.len())
+    }
+
+    #[test]
+    fn test_new_centroids() {
+        let clusters: Vec<Vec<Vec<f64>>> = vec![
+            vec![vec![1.0, 1.0], vec![2.0, 2.0]],
+            vec![vec![5.0, 5.0], vec![6.0, 6.0]],
+            vec![vec![-1.0, -1.0], vec![-2.0, -2.0]],
+        ];
+
+        let target_centroids: Vec<Vec<f64>> =
+            vec![vec![1.5, 1.5], vec![5.5, 5.5], vec![-1.5, -1.5]];
+
+        let centroids = new_centroids(&clusters).unwrap();
+
+        assert_eq!(target_centroids, centroids)
     }
 }

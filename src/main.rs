@@ -1,4 +1,5 @@
-// use matrix::Matrix;
+use matrix::Matrix;
+use models::cluster::kmeans;
 
 pub mod algebra;
 pub mod data;
@@ -11,10 +12,18 @@ pub mod vector;
 fn main() {
     // let rows = vec![
     //     vec![0.0, 0.0],
-    //     vec![-1.0, -1.0],
-    //     vec![2.0, 2.0],
-    //     vec![3.0, 3.0],
+    //     vec![0.0, 0.5],
+    //     vec![0.5, 0.0],
+    //     vec![4.0, 4.0],
+    //     vec![4.5, 4.0],
+    //     vec![4.0, 5.0],
     // ];
+
+    // let matrix = Matrix::new(rows).unwrap();
+
+    // let cluster_res = kmeans(&matrix, 2).unwrap();
+
+    // println!("{:?}", cluster_res)
     // let m = Matrix::new(rows).unwrap();
     // let n_centroids = 3;
     // let centroids = models::cluster::kpp_init(&m, n_centroids).unwrap();
