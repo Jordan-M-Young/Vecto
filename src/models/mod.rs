@@ -3,10 +3,8 @@ use crate::matrix::{inverse::cramer_inverse, operations::multiply_matrices, Matr
 
 pub fn linear_regression(x: &Matrix<f64>, y: &Matrix<f64>) -> Matrix<f64> {
     let xt = x.transpose();
-    println!("{:?}", xt);
 
     let left = multiply_matrices(&xt, &x).unwrap();
-    println!("lleft {:?}", left);
     let left = cramer_inverse(&left).unwrap();
     let right = multiply_matrices(&xt, &y).unwrap();
 
