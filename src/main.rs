@@ -1,6 +1,3 @@
-use matrix::Matrix;
-use models::cluster::kmeans;
-
 pub mod algebra;
 pub mod data;
 pub mod error;

@@ -1,7 +1,6 @@
-
 pub struct DecisionTree {
     _min_samples: u32,
-    _max_depth: u32
+    _max_depth: u32,
 }
 
 pub struct TreeNode {
@@ -10,14 +9,12 @@ pub struct TreeNode {
     _left: TreeNodes,
     _right: TreeNodes,
     _gain: f64,
-    _value: u32
+    _value: u32,
 }
 
-pub struct NullNode{
-
-}
+pub struct NullNode {}
 
 pub enum TreeNodes {
     TreeNode,
-    NullNode
+    NullNode,
 }
