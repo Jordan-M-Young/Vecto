@@ -1,5 +1,5 @@
 # Pikus
-A Linear Algebra library with Machine Learning aspirations. Check out what this can do below.
+A Linear Algebra library with Machine Learning aspirations. Check out whats possible below.
 
 
 ## Build
@@ -14,7 +14,7 @@ Clone this repo, build the project and add the following to your project's Cargo
 
 ```toml
 [dependencies]
-vecto = { path = "<PATH_TO>/vecto/" }
+pikus = { path = "<PATH_TO>/vecto/" }
 ```
 
 ## Use
@@ -124,8 +124,19 @@ let targets = Matrix::new(y).unwrap();
 
 let betas = models::linear_regression(&features, &targets);
 
-println!("{:?}",betas)
+//K-Means Clustering
+let rows = vec![
+    vec![0.0, 0.0],
+    vec![0.0, 0.5],
+    vec![0.5, 0.0],
+    vec![4.0, 4.0],
+    vec![4.5, 4.0],
+    vec![4.0, 5.0],
+];
 
+let matrix = Matrix::new(rows).unwrap();
+
+let cluster_res = kmeans(&matrix, 2).unwrap();
 
 
 ```
