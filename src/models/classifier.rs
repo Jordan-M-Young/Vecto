@@ -18,3 +18,14 @@ pub enum TreeNodes {
     TreeNode,
     NullNode,
 }
+
+
+impl DecisionTree{
+    pub fn new(min_samples: u32, min_depth: u32) -> DecisionTree {
+        DecisionTree{
+            _min_samples: min_samples,
+            _max_depth: min_depth
+        }
+    }
+}
+
