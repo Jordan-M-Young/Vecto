@@ -1,3 +1,4 @@
+pub mod classifier;
 pub mod cluster;
 use crate::matrix::{inverse::cramer_inverse, operations::multiply_matrices, Matrix};
 
