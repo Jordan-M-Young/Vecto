@@ -1,4 +1,4 @@
-use crate::error::{self, CustomErrors};
+use crate::error::{self, CustomErrors, MismatchError};
 use crate::matrix::logic::{can_add, can_multiply, is_square};
 use crate::matrix::Matrix;
 use crate::vector::operations::{add_vec, sub_vec};
@@ -180,15 +180,66 @@ pub fn get_determinant<
     Ok(determinant)
 }
 
+pub fn multiply_matrix_vector(mat: &Matrix<f64>, vec: &Vec<f64>) -> Result<Vec<f64>, CustomErrors> {
+    let m = mat.m;
+    let n = mat.n;
+
+    if n != vec.len() {
+        return Err(CustomErrors::Mismatch(MismatchError));
+    }
+
+    let rows = &mat.rows;
+
+    let mut prod: Vec<f64> = vec![];
+
+    for i in 0..m {
+        let mut row_prod = 0.0;
+        for j in 0..n {
+            let mat_item = rows[i][j];
+            let vec_item = vec[j];
+            row_prod += mat_item * vec_item
+        }
+        prod.push(row_prod)
+    }
+
+    Ok(prod)
+}
+
 //tests......
 // ------------------------------
 // ------------------------------
 
 #[cfg(test)]
 mod tests {
-    use crate::matrix::{operations, Matrix};
+    use crate::{
+        error::{CustomErrors, MismatchError},
+        matrix::{operations, Matrix},
+    };
 
-    use super::multiply_matrices;
+    use super::{multiply_matrices, multiply_matrix_vector};
+    #[test]
+    fn test_multiply_matrix_vector() {
+        let mat_rows = vec![vec![1.0, -1.0, 2.0], vec![0.0, -3.0, 1.0]];
+        let mat = Matrix::new(mat_rows).unwrap();
+
+        let vec = vec![2.0, 1.0, 0.0];
+
+        let assumed = vec![1.0, -3.0];
+
+        let target = multiply_matrix_vector(&mat, &vec).unwrap();
+
+        assert_eq!(assumed, target);
+
+        let vec2 = vec![2.0, 1.0];
+
+        let assumed = CustomErrors::Mismatch(MismatchError);
+        match multiply_matrix_vector(&mat, &vec2) {
+            Ok(_) => {}
+            Err(err) => {
+                assert_eq!(err, assumed);
+            }
+        }
+    }
 
     #[test]
     fn test_add_matrices_2_x_2() {
