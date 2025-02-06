@@ -1,3 +1,5 @@
+// use crate::matrix::Matrix;
+
 pub struct DecisionTree {
     _min_samples: u32,
     _max_depth: u32,
