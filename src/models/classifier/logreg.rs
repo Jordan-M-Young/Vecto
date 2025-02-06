@@ -3,7 +3,7 @@ use std::f64::consts;
 use crate::{
     error::CustomErrors,
     matrix::{operations::multiply_matrix_vector, Matrix},
-    vector::util::zeroes,
+    vector::{operations::{add_vec, mean, multiply_vec, scalar_add, sub_from_scalar, sub_vec}, util::zeroes},
 };
 
 pub fn vector_logistic(vec: &Vec<f64>) -> Vec<f64> {
@@ -13,15 +13,78 @@ pub fn vector_logistic(vec: &Vec<f64>) -> Vec<f64> {
         new_vec.push(logistic(vec[i]));
     }
     new_vec
+
+}
+
+pub fn vector_log(vec: &Vec<f64>) -> Vec<f64> {
+    let mut new_vec = vec![];
+    for i in 0..vec.len() {
+        new_vec.push(vec[i].ln())
+    }
+    new_vec
 }
 
 pub fn logistic(x: f64) -> f64 {
     return 1.0 / (1.0 + consts::E.powf(-x));
 }
 
-pub fn bce_loss(y_true: Vec<f64>, y_pred: Vec<f64>) -> f64 {
+pub fn bce_loss(y_true: &Vec<f64>, y_pred: &Vec<f64>) -> Result<f64,CustomErrors> {
     let epsilon = 1e-9;
-    0.0
+    let e_y_pred = match scalar_add(y_true, epsilon) {
+        Ok(e_y_pred) => e_y_pred,
+        Err(err) => {
+            return Err(err)
+        }
+    };
+
+    let log_e_y_pred = vector_log(&e_y_pred);
+
+    let y1 = match multiply_vec(y_true, &log_e_y_pred) {
+        Ok(y1) => y1,
+        Err(err) => {
+            return Err(err)
+        }
+    };
+
+    let left2 = sub_from_scalar(1.0, y_true);
+    let ypred_ep = match scalar_add(y_pred, epsilon) {
+        Ok(ypred_e) => ypred_e,
+        Err(err) =>  {
+            return Err(err)
+        }
+    };
+    let right2 = sub_from_scalar(1.0, &ypred_ep);
+    let log_right2 = vector_log(&right2);
+
+    let y2 = match multiply_vec(&left2, &log_right2) {
+        Ok(y2) => y2,
+        Err(err) => {
+            return Err(err)
+        }
+    };
+
+    let y = match add_vec(&y1, &y2) {
+        Ok(y) => y,
+        Err(err) => {
+            return Err(err)
+        }
+    };
+
+    let loss = match mean(&y) {
+        Ok(loss) => {
+            loss * - 1.0
+        },
+        Err(err) => {
+            return Err(err)
+        }
+    };
+
+    Ok(loss)
+
+
+
+
+    
 }
 
 pub struct LogisticRegression {
@@ -59,7 +122,12 @@ impl LogisticRegression {
                 Err(err) => return Err(err),
             };
 
-            // loss = compute_loss(y, out)
+            let loss = match bce_loss(&targets, &out) {
+                Ok(loss) => loss,
+                Err(err) => {
+                    return Err(err)
+                }
+            };
 
             // losses.push(loss)
 
@@ -85,4 +153,5 @@ impl LogisticRegression {
 
         Ok(a)
     }
+
 }

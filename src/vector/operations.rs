@@ -40,6 +40,25 @@ pub fn sub_vec<T: Copy + Sub<Output = T>>(
     return Ok(vec_3);
 }
 
+
+pub fn multiply_vec<T: Copy + Mul<Output = T>>(
+    vec_1: &Vec<T>,
+    vec_2: &Vec<T>,
+) -> Result<Vec<T>, CustomErrors> {
+    if vec_1.len() != vec_2.len() {
+        return Err(CustomErrors::Mismatch(MismatchError));
+    }
+
+    let mut new_vec: Vec<T> = vec![];
+
+    for i in 0..vec_1.len() {
+        let prd = vec_1[i] * vec_2[i];
+        new_vec.push(prd)
+    }
+
+    Ok(new_vec)
+}
+
 pub fn sum<T: Copy + From<u8> + Add<Output = T> + std::ops::AddAssign>(
     vec_1: &Vec<T>,
 ) -> Result<T, CustomErrors> {
@@ -291,4 +310,12 @@ pub fn scalar_divide<T: Into<f64> + std::ops::Div<Output = T> + Copy>(
     }
 
     Ok(vec_2)
+}
+
+pub fn sub_from_scalar<T: std::ops::Sub<Output = T> + Copy>(scalar: T, vec: &Vec<T>) -> Vec<T> {
+    let mut new: Vec<T> = vec![];
+    for i in 0..vec.len() {
+        new.push(scalar-vec[i])
+    }
+    new
 }
