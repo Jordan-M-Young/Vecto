@@ -40,7 +40,6 @@ pub fn sub_vec<T: Copy + Sub<Output = T>>(
     return Ok(vec_3);
 }
 
-
 pub fn multiply_vec<T: Copy + Mul<Output = T>>(
     vec_1: &Vec<T>,
     vec_2: &Vec<T>,
@@ -315,7 +314,7 @@ pub fn scalar_divide<T: Into<f64> + std::ops::Div<Output = T> + Copy>(
 pub fn sub_from_scalar<T: std::ops::Sub<Output = T> + Copy>(scalar: T, vec: &Vec<T>) -> Vec<T> {
     let mut new: Vec<T> = vec![];
     for i in 0..vec.len() {
-        new.push(scalar-vec[i])
+        new.push(scalar - vec[i])
     }
     new
 }
