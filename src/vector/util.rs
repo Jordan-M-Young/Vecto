@@ -37,39 +37,13 @@ pub fn is_all_zeroes<T: From<u8> + std::cmp::PartialEq>(vec: &Vec<T>) -> bool {
     return true;
 }
 
-#[cfg(test)]
-mod tests {
-    use crate::vector::util::{is_all_zeroes, vec_is_diagonalized};
-    #[test]
-    fn test_vec_is_diagonalized() {
-        let vec1 = vec![0, 0, 1];
-        let vec2 = vec![0, 1, 0];
-        let vec3 = vec![1, 0, 0];
-
-        assert_eq!(vec_is_diagonalized(&vec1, 2), true);
-        assert_eq!(vec_is_diagonalized(&vec1, 1), false);
-        assert_eq!(vec_is_diagonalized(&vec2, 0), false);
-        assert_eq!(vec_is_diagonalized(&vec2, 1), true);
-        assert_eq!(vec_is_diagonalized(&vec3, 1), false);
-        assert_eq!(vec_is_diagonalized(&vec3, 0), true);
+pub fn zeroes(size: usize) -> Vec<f64> {
+    let mut zeros = vec![];
+    for _ in 0..size {
+        zeros.push(0.0)
     }
-
-    #[test]
-    fn test_is_all_zeros() {
-        let vec1 = vec![0, 0, 1];
-        let vec2 = vec![0, 0, 0];
-        let vec3: Vec<f32> = vec![0.0, 0.0, 0.0];
-        let vec4: Vec<f64> = vec![0.0, 0.0, 0.0];
-        let vec5: Vec<f64> = vec![2.0, 0.0, 0.0];
-
-        assert_eq!(is_all_zeroes(&vec1), false);
-        assert_eq!(is_all_zeroes(&vec2), true);
-        assert_eq!(is_all_zeroes(&vec3), true);
-        assert_eq!(is_all_zeroes(&vec4), true);
-        assert_eq!(is_all_zeroes(&vec5), false);
-    }
+    zeros
 }
-
 pub fn get_perms(size: usize) -> Vec<Vec<usize>> {
     let mut vec: Vec<usize> = vec![];
     for i in 0..size {
@@ -168,4 +142,50 @@ pub fn create_identity_matrix<T: Copy + From<u8>>(dim: usize) -> Result<Matrix<T
         m: dim,
         n: dim,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::vector::util::{is_all_zeroes, vec_is_diagonalized};
+
+    use super::zeroes;
+
+    #[test]
+    fn test_all_zeros() {
+        let assumed = vec![0.0, 0.0];
+        let size: usize = 2;
+
+        let target = zeroes(size);
+
+        assert_eq!(assumed, target)
+    }
+
+    #[test]
+    fn test_vec_is_diagonalized() {
+        let vec1 = vec![0, 0, 1];
+        let vec2 = vec![0, 1, 0];
+        let vec3 = vec![1, 0, 0];
+
+        assert_eq!(vec_is_diagonalized(&vec1, 2), true);
+        assert_eq!(vec_is_diagonalized(&vec1, 1), false);
+        assert_eq!(vec_is_diagonalized(&vec2, 0), false);
+        assert_eq!(vec_is_diagonalized(&vec2, 1), true);
+        assert_eq!(vec_is_diagonalized(&vec3, 1), false);
+        assert_eq!(vec_is_diagonalized(&vec3, 0), true);
+    }
+
+    #[test]
+    fn test_is_all_zeros() {
+        let vec1 = vec![0, 0, 1];
+        let vec2 = vec![0, 0, 0];
+        let vec3: Vec<f32> = vec![0.0, 0.0, 0.0];
+        let vec4: Vec<f64> = vec![0.0, 0.0, 0.0];
+        let vec5: Vec<f64> = vec![2.0, 0.0, 0.0];
+
+        assert_eq!(is_all_zeroes(&vec1), false);
+        assert_eq!(is_all_zeroes(&vec2), true);
+        assert_eq!(is_all_zeroes(&vec3), true);
+        assert_eq!(is_all_zeroes(&vec4), true);
+        assert_eq!(is_all_zeroes(&vec5), false);
+    }
 }
